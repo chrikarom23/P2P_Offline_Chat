@@ -1,17 +1,8 @@
 package com.example.test3
 
-class Convo{
-    var convoName: String? = null
-    var peers: String? = null
-    var cid: String? = null
-
-    constructor(){
-    }
-
-    constructor(name: String?, email: String?, uid: String?){
-        this.convoName = convoName
-        this.cid = cid
-        this.peers = peers
-    }
+class Convo(peer: String? = null,cid: String? = "999", priv: Boolean? = false) {
+    var peers: String? = peer
+    var cid: String? = cid
+    var privacy:Boolean? = priv
 
 }

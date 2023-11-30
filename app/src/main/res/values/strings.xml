@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">PeerChat</string>
+    <string name="app_name">Pares</string>
     <string name="find_peers_but">Find Peers</string>
     <string name="enter_username">Enter Username</string>
     <string name="welcome_title">Welcome to PeerChat</string>
-    <string name="peerchat">Peerchat</string>
+    <string name="peerchat">Pares</string>
     <string name="wifi_settings">Wifi Settings</string>
     <string name="internet_connectivity">Internet Connectivity</string>
     <string name="ipfs_settings">IPFS Settings</string>

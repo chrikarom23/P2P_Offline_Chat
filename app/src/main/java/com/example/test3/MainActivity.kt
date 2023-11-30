@@ -41,6 +41,7 @@ class MainActivity : AppCompatActivity() {
         val pbt1 = findViewById<Button>(R.id.Peerbutton)
         pbt1.setOnClickListener{
             val intent = Intent(this@MainActivity, PeersView::class.java)
+            intent.putExtra("Uname", uname.text.toString())
             startActivity(intent)
         }
     }
