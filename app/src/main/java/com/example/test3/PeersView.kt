@@ -24,16 +24,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.newSingleThreadContext
-import org.w3c.dom.Text
-import java.io.IOException
-import java.io.InputStream
-import java.io.OutputStream
-import java.net.InetAddress
-import java.net.InetSocketAddress
 import java.net.Socket
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 
 
 class PeersView : AppCompatActivity() {
@@ -70,6 +61,7 @@ class PeersView : AppCompatActivity() {
         Log.d("PeersView", "init completed")
         discovery()
         //var WifiPeerList = ArrayList<WifiP2pDeviceList>[]
+
 
     }
 

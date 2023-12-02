@@ -1,38 +1,33 @@
 package com.example.test3
 
-import android.annotation.SuppressLint
-import android.content.BroadcastReceiver
-import android.content.ClipData.Item
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
-import android.net.wifi.p2p.WifiP2pDeviceList
-import android.net.wifi.p2p.WifiP2pManager
-import androidx.appcompat.app.AppCompatActivity
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
-import android.os.Looper
-import android.provider.Settings
 import android.util.Log
-import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import androidx.activity.result.contract.ActivityResultContracts
-import java.nio.channels.InterruptedByTimeoutException
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import android.Manifest.permission as perm
 
 
 class MainActivity : AppCompatActivity() {
 
-    fun initializer(){
-
+    companion object {
+        private const val WIFI_PERMISSION_CODE = 500
+        private const val LOC_PERMISSION_CODE = 501
+        private const val NEARBY_PERMISSION_CODE = 500
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        initializer()
+        //initializer()
 
         val uname = findViewById<EditText>(R.id.uname)
 
@@ -40,9 +35,45 @@ class MainActivity : AppCompatActivity() {
 
         val pbt1 = findViewById<Button>(R.id.Peerbutton)
         pbt1.setOnClickListener{
+            checkPermission(perm.ACCESS_WIFI_STATE, WIFI_PERMISSION_CODE)
+            checkPermission(perm.ACCESS_COARSE_LOCATION, LOC_PERMISSION_CODE)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                checkPermission(perm.NEARBY_WIFI_DEVICES, NEARBY_PERMISSION_CODE)
+            }
             val intent = Intent(this@MainActivity, PeersView::class.java)
             intent.putExtra("Uname", uname.text.toString())
             startActivity(intent)
+        }
+    }
+
+    private fun checkPermission(permission: String, requestCode: Int) {
+        if (ContextCompat.checkSelfPermission(this@MainActivity, permission) == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(this@MainActivity, arrayOf(permission), requestCode)
+        } else {
+            Toast.makeText(this@MainActivity, "Permission already granted", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<String>,
+                                            grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == WIFI_PERMISSION_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this@MainActivity, "WIFI Permission Granted", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                Toast.makeText(this@MainActivity, "WIFI Permission Denied", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        } else if (requestCode == LOC_PERMISSION_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this@MainActivity, "LOCATION Permission Granted", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                Toast.makeText(this@MainActivity, "LOCATION Permission Denied", Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
     }
 
@@ -72,10 +103,5 @@ class MainActivity : AppCompatActivity() {
             // Invoke the superclass to handle it.
             super.onOptionsItemSelected(item)
         }
-    }
-    @SuppressLint("MissingSuperCall")
-    override fun onBackPressed() {
-        val intent2 = Intent(this, MainActivity::class.java)
-        startActivity(intent2)
     }
 }
