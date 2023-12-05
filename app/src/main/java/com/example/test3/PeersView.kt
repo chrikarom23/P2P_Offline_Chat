@@ -1,5 +1,6 @@
 package com.example.test3
 
+import android.bluetooth.BluetoothProfile.ServiceListener
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -11,6 +12,8 @@ import android.net.wifi.p2p.WifiP2pConfig
 import android.net.wifi.p2p.WifiP2pDevice
 import android.net.wifi.p2p.WifiP2pDeviceList
 import android.net.wifi.p2p.WifiP2pManager
+import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest
+import android.net.wifi.p2p.nsd.WifiP2pServiceRequest
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -22,6 +25,7 @@ import android.view.MenuItem
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.net.Socket
@@ -59,38 +63,75 @@ class PeersView : AppCompatActivity() {
         intentfil.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION)
         registerReceiver(breceiver, intentfil);
         Log.d("PeersView", "init completed")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            addServiceRequest()
+        }
         discovery()
         //var WifiPeerList = ArrayList<WifiP2pDeviceList>[]
 
 
     }
 
-    private fun discovery(){
+    private fun discovery() {
         //var uname = findViewById<TextView>(R.id.)
         //uname.text = intent.extras?.getString("uname")?: ""
         val pingpeers = findViewById<ImageButton>(R.id.pingDevices)
 
         Log.d("PeersView", "In discovery function")
-        val toast1 = Toast.makeText(this,"Discovery Started", Toast.LENGTH_LONG)
-        val toast2 = Toast.makeText(this,"Discovery Failed", Toast.LENGTH_LONG)
+        val toast1 = Toast.makeText(this, "Discovery Started", Toast.LENGTH_LONG)
+        val toast2 = Toast.makeText(this, "Discovery Failed", Toast.LENGTH_LONG)
 
-        pingpeers.setOnClickListener{
-            manager.discoverPeers(channel, object : WifiP2pManager.ActionListener{
-                override fun onSuccess() {
-                    toast1.show()
-                }
-
-                override fun onFailure(reason: Int) {
-                    toast2.show()
-                }
-
-            })
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            discoverService()
         }
-        Log.d("PeersView", "Checking for connection")
-        //connect()
+        else {
+            pingpeers.setOnClickListener {
+                manager.discoverPeers(channel, object : WifiP2pManager.ActionListener {
+                    override fun onSuccess() {
+                        toast1.show()
+                    }
+
+                    override fun onFailure(reason: Int) {
+                        toast2.show()
+                    }
+
+                })
+            }
+            Log.d("PeersView", "Checking for connection")
+            //connect()
+        }
+    }
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
+    open fun addServiceRequest(): Unit
+    {
+        var req = WifiP2pDnsSdServiceRequest.newInstance("pare", "_http._tcp")
+        manager.addServiceRequest(channel,req,object: WifiP2pManager.ActionListener{
+            override fun onSuccess() {
+                Log.d("PeersView", "Added Request $req")
+            }
+
+            override fun onFailure(reason: Int) {
+                Log.d("PeersView", "Failed to add request :(")
+            }
+
+        })
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
+    open fun discoverService():Unit{
+        manager.discoverServices(channel,object: WifiP2pManager.ActionListener{
+            override fun onSuccess() {
+                Log.d("PeersView", "Discovered SS Request")
+            }
+
+            override fun onFailure(reason: Int) {
+                Log.d("PeersView", "Failed to Discover SS request :(")
+            }
+
+        })
+    }
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_peers_view)
@@ -145,6 +186,7 @@ class PeersView : AppCompatActivity() {
     }
 
 */
+
     val peerListListener = WifiP2pManager.PeerListListener { peerList ->
         val refreshedPeers = peerList.deviceList
         if(refreshedPeers != peers) {

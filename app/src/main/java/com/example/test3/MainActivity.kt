@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val WIFI_PERMISSION_CODE = 500
         private const val LOC_PERMISSION_CODE = 501
-        private const val NEARBY_PERMISSION_CODE = 500
+        private const val NEARBY_PERMISSION_CODE = 502
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         if (ContextCompat.checkSelfPermission(this@MainActivity, permission) == PackageManager.PERMISSION_DENIED) {
             ActivityCompat.requestPermissions(this@MainActivity, arrayOf(permission), requestCode)
         } else {
-            Toast.makeText(this@MainActivity, "Permission already granted", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@MainActivity, "Permission already granted: $permission", Toast.LENGTH_SHORT).show()
         }
     }
 
