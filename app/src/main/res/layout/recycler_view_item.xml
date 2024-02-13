@@ -18,8 +18,8 @@
 
   <TextView
       android:id="@+id/ConvoName"
-      android:layout_width="199dp"
-      android:layout_height="24dp"
+      android:layout_width="202dp"
+      android:layout_height="28dp"
       android:layout_gravity="center"
       android:layout_marginEnd="132dp"
       android:layout_marginRight="132dp"
@@ -28,6 +28,7 @@
       android:padding="1dp"
       android:scrollHorizontally="true"
       android:singleLine="true"
+      android:textColor="@color/bluish"
       android:textSize="20sp"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
@@ -39,8 +40,8 @@
 
   <TextView
       android:id="@+id/Gid"
-      android:layout_width="259dp"
-      android:layout_height="24dp"
+      android:layout_width="266dp"
+      android:layout_height="29dp"
       android:layout_marginStart="12dp"
       android:layout_marginLeft="12dp"
       android:layout_weight="1"
@@ -50,12 +51,13 @@
       android:scrollHorizontally="true"
       android:singleLine="true"
       android:text="Group ID"
+      android:textColor="@color/whitegrey"
       android:textSize="14sp"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintHorizontal_bias="0.024"
+      app:layout_constraintHorizontal_bias="0.0"
       app:layout_constraintStart_toEndOf="@+id/Convopic"
       app:layout_constraintTop_toBottomOf="@+id/ConvoName"
-      app:layout_constraintVertical_bias="0.2" />
+      app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,22 +4,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PeersView">
+    tools:context=".PeersView"
+    android:elevation="2dp"
+    android:background="@drawable/bggrad">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/convoRecyclerView"
         android:layout_width="410dp"
         android:layout_height="593dp"
-        app:layout_constraintBottom_toTopOf="@+id/pingDevices"
+        android:layout_marginStart="2dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="78dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/my_toolbar"
+        app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/recycler_view_item" />
 
     <ImageButton
         android:id="@+id/pingDevices"
         android:layout_width="399dp"
         android:layout_height="64dp"
+        android:background="@drawable/findbut"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,9 +39,9 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_marginTop="4dp"
-        android:background="@color/white"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.Light"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"

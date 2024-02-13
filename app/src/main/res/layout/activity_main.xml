@@ -4,18 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:elevation="2dp"
+    android:background="@drawable/bggrad">
 
     <TextView
         android:id="@+id/Title1"
         android:layout_width="399dp"
         android:layout_height="51dp"
-        android:background="#FFFFFF"
         android:fontFamily="sans-serif-medium"
         android:text="@string/welcome_title"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textColor="#1F1137"
+        android:textColor="@color/bluish"
         android:textSize="24sp"
         android:typeface="monospace"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -31,6 +32,7 @@
         android:layout_width="261dp"
         android:layout_height="58dp"
         android:ems="10"
+        android:textColor="@color/midgrey"
         android:hint="@string/enter_username"
         android:inputType="text"
         android:textAlignment="center"
@@ -47,18 +49,52 @@
         android:layout_height="wrap_content"
         android:text="@string/find_peers_but"
         android:visibility="visible"
+        android:background="@drawable/buttond1"
+        android:textColor="@color/bluish"
+        android:elevation="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/uname"
-        app:layout_constraintVertical_bias="0.627" />
+        app:layout_constraintVertical_bias="0.625" />
+
+    <Button
+        android:id="@+id/Viewchat"
+        android:layout_width="115dp"
+        android:layout_height="46dp"
+        android:background="@drawable/buttond2"
+        android:textColor="@color/baseblack"
+        android:elevation="10dp"
+        android:text="View Chats"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/uname"
+        app:layout_constraintVertical_bias="0.760" />
+
+    <Button
+        android:id="@+id/Exitapp"
+        android:layout_width="140dp"
+        android:layout_height="46dp"
+        android:background="@drawable/buttond3"
+        android:textColor="@color/baseblack"
+        android:elevation="10dp"
+        android:text="Exit application"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/uname"
+        app:layout_constraintVertical_bias="0.890" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/white"
+        android:textAlignment="center"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.Light"
         app:layout_constraintEnd_toEndOf="parent"

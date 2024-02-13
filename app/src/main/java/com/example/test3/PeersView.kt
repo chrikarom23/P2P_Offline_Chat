@@ -1,19 +1,14 @@
 package com.example.test3
 
-import android.bluetooth.BluetoothProfile.ServiceListener
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.net.wifi.WpsInfo
 import android.net.wifi.p2p.WifiP2pConfig
 import android.net.wifi.p2p.WifiP2pDevice
-import android.net.wifi.p2p.WifiP2pDeviceList
+import android.net.wifi.p2p.WifiP2pInfo
 import android.net.wifi.p2p.WifiP2pManager
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest
-import android.net.wifi.p2p.nsd.WifiP2pServiceRequest
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -23,17 +18,23 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageButton
-import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
+import java.net.InetAddress
+import java.net.InetSocketAddress
 import java.net.Socket
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 
-class PeersView : AppCompatActivity() {
+class PeersView : AppCompatActivity(){
 
-    private lateinit var ConvoRecyclerView: RecyclerView
+    lateinit var ConvoRecyclerView: RecyclerView
     private lateinit var availableConvo: ArrayList<Convo>
     private lateinit var Cadapter: ConvoAdapter
 
@@ -46,7 +47,9 @@ class PeersView : AppCompatActivity() {
     //var peers = ArrayList<WifiP2pDevice>()
     val peers = mutableListOf<WifiP2pDevice>()
     lateinit var deviceNameAr: String
-    //lateinit var deviceAr: ArrayList<WifiP2pDevice>
+    lateinit var deviceAr: ArrayList<WifiP2pDevice>
+    //lateinit var config : WifiP2pConfig
+
 
     private fun init() {
 
@@ -54,7 +57,6 @@ class PeersView : AppCompatActivity() {
         manager = getSystemService(Context.WIFI_P2P_SERVICE) as WifiP2pManager
         channel = manager.initialize(this, mainLooper, null)
         breceiver = WifiDreciever(manager, channel, this)
-        val socket = Socket()
 
         intentfil = IntentFilter()
         intentfil.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION)
@@ -63,13 +65,12 @@ class PeersView : AppCompatActivity() {
         intentfil.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION)
         registerReceiver(breceiver, intentfil);
         Log.d("PeersView", "init completed")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            addServiceRequest()
-        }
+        //add service discovery later
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+//            addServiceRequest()
+//        }
         discovery()
-        //var WifiPeerList = ArrayList<WifiP2pDeviceList>[]
-
-
+        //var WifiPeerList = ArrayList<WifiP2pDeviceList>[] 9
     }
 
     private fun discovery() {
@@ -81,11 +82,12 @@ class PeersView : AppCompatActivity() {
         val toast1 = Toast.makeText(this, "Discovery Started", Toast.LENGTH_LONG)
         val toast2 = Toast.makeText(this, "Discovery Failed", Toast.LENGTH_LONG)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            discoverService()
-        }
-        else {
-            pingpeers.setOnClickListener {
+        //add service discovery later
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+//            discoverService()
+//        }
+//        else {
+        pingpeers.setOnClickListener {
                 manager.discoverPeers(channel, object : WifiP2pManager.ActionListener {
                     override fun onSuccess() {
                         toast1.show()
@@ -98,9 +100,47 @@ class PeersView : AppCompatActivity() {
                 })
             }
             Log.d("PeersView", "Checking for connection")
-            //connect()
-        }
+        //}
     }
+
+    private fun connectInit(){
+        Log.d("PeersView", "Initializing Connection")
+        var toast3: Toast = Toast.makeText(this, "Connected to ", Toast.LENGTH_LONG)
+        val toast4 = Toast.makeText(this, "Connection Failed", Toast.LENGTH_LONG)
+
+//        Cadapter.onItemClick = {
+//            val toast3 = Toast.makeText(this, "Clicked", Toast.LENGTH_LONG)
+//            toast3.show()
+//        }
+//
+//        Cadapter.onItemClick = {
+//            val toast3 = Toast.makeText(this, "Clicked", Toast.LENGTH_LONG)
+//            toast3.show()
+//        }
+
+        Cadapter.setOnItemClickListener(object : ItemClickListener{
+            override fun onClickPosition(pos: Int) {
+                Log.d("PeersView", "In ItemClickListener")
+                val device : WifiP2pDevice = deviceAr[pos]
+                Log.i("PeersView", "Attempting to connect to device: $device")
+                var config: WifiP2pConfig = WifiP2pConfig()
+                config.deviceAddress = device.deviceAddress
+                manager.connect(channel,config,object: WifiP2pManager.ActionListener{
+                    override fun onSuccess() {
+                        toast3.setText("Connected to $device")
+                        toast3.show()
+                        val intent = Intent(this@PeersView, messaging::class.java)
+                        startActivity(intent)
+                    }
+
+                    override fun onFailure(reason: Int) {
+                        toast4.show()
+                    }
+                })
+            }
+        })
+    }
+
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
     open fun addServiceRequest(): Unit
     {
@@ -117,7 +157,6 @@ class PeersView : AppCompatActivity() {
         })
     }
 
-
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
     open fun discoverService():Unit{
         manager.discoverServices(channel,object: WifiP2pManager.ActionListener{
@@ -131,61 +170,26 @@ class PeersView : AppCompatActivity() {
 
         })
     }
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_peers_view)
+
         setSupportActionBar(findViewById(R.id.my_toolbar))
         var uname: String = intent.getStringExtra("Uname").toString()
         supportActionBar?.setTitle("Welcome, $uname")
-        init()
+
         Log.d("PeersView", "onCreate peers view")
 
         availableConvo = ArrayList<Convo>()
         Cadapter = ConvoAdapter(availableConvo)
-
-        /*
-
-        val test = ArrayList<Convo>()
-        var tf:Boolean = true
-        for(i in 0..20){
-            if(i%2==0){
-                tf = true
-            }
-            else{
-                tf=false
-            }
-            test.add(Convo("device $i", "$i", tf))
-        }
-
-         */
-
         ConvoRecyclerView = findViewById<RecyclerView>(R.id.convoRecyclerView)
         ConvoRecyclerView.layoutManager = LinearLayoutManager(this)
         ConvoRecyclerView.adapter = Cadapter
-
-        //val adapter = ConvoAdapter(test)
-        //ConvoRecyclerView.adapter = adapter
+        init()
 
     }
 
-/*
-
-    fun onPeersAvailable(peers: WifiP2pDeviceList) {
-        // Handle the list of available peers
-        val deviceList = peers.deviceList
-        for (device: WifiP2pDevice in deviceList) {
-            // Process each device (physical device or virtual emulator)
-            Log.d("MainActivity", "Device Name: ${device.deviceName}, Address: ${device.deviceAddress}")
-            availableConvo.add(device.deviceName)
-        val adapter = ConvoAdapter(availableConvo)
-        ConvoRecyclerView.adapter = adapter
-        val txtmarquee = findViewById<TextView>(R.id.ConvoName)
-        txtmarquee.setSelected(true)
-        }
-    }
-
-*/
 
     val peerListListener = WifiP2pManager.PeerListListener { peerList ->
         val refreshedPeers = peerList.deviceList
@@ -194,116 +198,117 @@ class PeersView : AppCompatActivity() {
             availableConvo.clear()
             peers.addAll(refreshedPeers)
             Log.d("PeersView", "In peerListListener")
+
             deviceNameAr = peerList.deviceList.toString()
+            deviceAr = arrayListOf<WifiP2pDevice>()
+
             var index = 0
             for (i in peerList.deviceList) {
-                //deviceAr.add(i)
+                deviceAr.add(i)
+                Log.i("PeersView", "Adding device to deviceAr: $deviceAr")
                 availableConvo.add(Convo(
-                    (i.toString()),
-                    "$index",
+                    (i.deviceName.toString()),
+                    i.deviceAddress.toString(),
                     (index%2==0)
                 ))
                 index++
                 Log.d("PeersView", "Looping through device names: $i")
             }
-            Log.d("Mine", peerList.deviceList.toString())
-            val adapter = ConvoAdapter(availableConvo)
-            ConvoRecyclerView.adapter = adapter
+            Log.d("PeersView", "Out of Loop")
+
+            Cadapter = ConvoAdapter(availableConvo)
+            ConvoRecyclerView.adapter = Cadapter
+            connectInit()
             //(Cadapter as WiFiPeerListAdapter
-
+//            adapter.onItemClick = {
+//                Log.d("PeersView", "Item Clicked")
+//                val toast3 = Toast.makeText(this, "Clicked", Toast.LENGTH_LONG)
+//                toast3.show()
+//            }
         }
-
         if(peers.isEmpty()){
             Log.d("Mine", "No peers found")
             val toast = Toast.makeText(this,"No Matching Peers Nearby", Toast.LENGTH_SHORT)
             toast.show()
         }
+//        val device : WifiP2pDevice = deviceAr[0]
+//        Log.i("PeersView", "Testing Connection with device 0")
+//        var conf: WifiP2pConfig = WifiP2pConfig()
+//        conf.deviceAddress = device.deviceAddress
+//        manager.connect(channel,conf,object: WifiP2pManager.ActionListener{
+//            override fun onSuccess() {
+//                Log.i("PeersView", "Connected to device 0")
+//            }
+//
+//            override fun onFailure(reason: Int) {
+//                Log.i("PeersView", "Cant Connect to device 0")
+//            }
+//        })
     }
 
-/*
-    public class ClientClass: Thread{
-        lateinit var HostAdd: String
-        private lateinit var inputstream : InputStream
-        private lateinit var outputstream : OutputStream
-        constructor(hostaddress: InetAddress){
-            HostAdd = hostaddress.hostAddress.toString()
-        }
-
-        override fun run() {
-            val socket = Socket()
-            try {
-                socket.connect(InetSocketAddress(HostAdd, 8888), 500)
-                inputstream = socket.getInputStream()
-                outputstream = socket.getOutputStream()
-            }
-            catch (e: IOException){
-                e.printStackTrace()
-            }
-            lateinit var executor:ExecutorService
-            lateinit var handler: Handler
-            executor = Executors.newSingleThreadExecutor()
-            handler = Handler(Looper.getMainLooper())
-
-            executor.execute(Runnable {
-                var buffer: ByteArray
-                var bytes: Int
-
-                while(socket!=null){
-                    bytes = inputstream.read(buffer)
-                    if(bytes>0) run {
-                        var finalbytes: Int = bytes
-                        handler.post(Runnable {
-                            var tempmsg: String = String(buffer, 0, finalbytes)
-                        })
-                    }
-                }
-            })
-        }
-    }
-    */
-/*
-    fun connect(){
-        val device = peers[1]
-
-        val config = WifiP2pConfig().apply{
-            deviceAddress = device.deviceAddress
-            wps.setup = WpsInfo.PBC
-        }
-
-        manager.connect(channel, config, object: WifiP2pManager.ActionListener{
-            override fun onSuccess() {
-                val t = Toast.makeText(this@PeersView,"Connected to peers[0]", Toast.LENGTH_LONG).show()
-            }
-
-            override fun onFailure(reason: Int) {
-                val t = Toast.makeText(this@PeersView,"Failed to connect to peer", Toast.LENGTH_LONG).show()
-            }
-        })
-
-        /* todo-> ADD LEGACY SUPPORT LATER USING CREATE GROUP COMMAND. TEST DEVICES ARE UPDATED
-        manager.createGroup(channel, config, object: WifiP2pManager.ActionListener{
-            override fun onSuccess() {
-                val t = Toast.makeText(this@PeersView,"Connected to peers[0]", Toast.LENGTH_LONG).show()
-            }
-
-            override fun onFailure(reason: Int) {
-                val t = Toast.makeText(this@PeersView,"Failed to connect to peer", Toast.LENGTH_LONG).show()
-            }
-        })
-         */
-    }
-*//*
-    val connlistener = WifiP2pManager.ConnectionInfoListener {
-            info ->
+    val connectionInfoListener = WifiP2pManager.ConnectionInfoListener {
+        info: WifiP2pInfo ->
         val groupOwnerAddress: String? = info.groupOwnerAddress.hostAddress
         if(info.groupFormed && info.isGroupOwner){
-
+                Log.d("PeersView","Group formed and current device is Host")
         }
         else if(info.groupFormed){
-
-        }
+            Log.d("PeersView","Group formed and current device is guest")
+       }
     }
-*/
+
+//    class ClientClass: Thread{
+//        var HostAdd: String
+//        private lateinit var inputstream : InputStream
+//        private lateinit var outputstream : OutputStream
+//        constructor(hostaddress: InetAddress){
+//            HostAdd = hostaddress.hostAddress.toString()
+//        }
+//
+//        override fun run() {
+//            val socket = Socket()
+//            try {
+//                socket.connect(InetSocketAddress(HostAdd, 8888), 500)
+//                inputstream = socket.getInputStream()
+//                outputstream = socket.getOutputStream()
+//            }
+//            catch (e: IOException){
+//                e.printStackTrace()
+//            }
+//            lateinit var executor: ExecutorService
+//            lateinit var handler: Handler
+//            executor = Executors.newSingleThreadExecutor()
+//            handler = Handler(Looper.getMainLooper())
+//
+//            executor.execute(Runnable {
+//                var buffer: ByteArray
+//                var bytes: Int
+//
+//                while(socket!=null){
+//                    bytes = inputstream.read(buffer)
+//                    if(bytes>0) run {
+//                        var finalbytes: Int = bytes
+//                        handler.post(Runnable {
+//                            var tempmsg: String = String(buffer, 0, finalbytes)
+//                        })
+//                    }
+//                }
+//            })
+//        }
+//    }
+//
+
+//    val connlistener = WifiP2pManager.ConnectionInfoListener {
+//            info ->
+//        val groupOwnerAddress: String? = info.groupOwnerAddress.hostAddress
+//        if(info.groupFormed && info.isGroupOwner){
+//
+//        }
+//        else if(info.groupFormed){
+//
+//        }
+//    }
+/*
     fun isInternetAvailable(context: Context): Boolean {
         var result = false
         val connectivityManager =
@@ -334,7 +339,7 @@ class PeersView : AppCompatActivity() {
 
         return result
     }
-
+*/
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_s,menu)
         Log.i("PeersView", "Create options menu")
@@ -381,5 +386,11 @@ class PeersView : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(breceiver)
+    }
+
+    class ClientClass(target: Runnable?) : Thread(target) {
+        lateinit var hostadd: String;
+        lateinit var inputStream: InputStream;
+        lateinit var outputStream: OutputStream;
     }
 }
