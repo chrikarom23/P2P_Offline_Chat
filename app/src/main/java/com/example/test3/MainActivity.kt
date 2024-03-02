@@ -22,7 +22,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import kotlin.math.log
 import kotlin.system.exitProcess
 import android.Manifest.permission as perm
 
@@ -299,11 +298,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        R.id.action_hmmm -> {
-            // User chooses the "Settings" item. Show the app settings UI.
-            Log.i("Mine", "Hmmmmmm")
-            true
-        }
+
 
         R.id.action_settings -> {
             // User chooses the "Favorite" action. Mark the current item as a

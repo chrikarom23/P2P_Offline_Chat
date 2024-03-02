@@ -10,38 +10,34 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/convoRecyclerView"
-        android:layout_width="410dp"
-        android:layout_height="593dp"
-        android:layout_marginStart="2dp"
-        android:layout_marginLeft="2dp"
-        android:layout_marginTop="60dp"
-        android:layout_marginBottom="78dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/my_toolbar"
         tools:listitem="@layout/recycler_view_item" />
 
     <ImageButton
         android:id="@+id/pingDevices"
-        android:layout_width="399dp"
+        android:layout_width="0dp"
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginVertical="3dp"
         android:layout_height="64dp"
         android:background="@drawable/findbut"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.991"
+        app:layout_constraintTop_toBottomOf="@id/my_toolbar"
+        app:layout_constraintVertical_bias="1"
         app:srcCompat="@drawable/baseline_network_ping_24" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_marginTop="4dp"
+        android:layout_height="50dp"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.Light"
-
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"

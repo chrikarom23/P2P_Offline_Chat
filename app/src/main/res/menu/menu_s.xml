@@ -8,9 +8,4 @@
         android:title="Settings"
         app:showAsAction="never"/>
 
-    <item
-        android:id="@+id/action_hmmm"
-        android:title="Set2"
-        app:showAsAction="never"/>
-
 </menu>

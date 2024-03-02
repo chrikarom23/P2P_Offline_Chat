@@ -4,13 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
-    
+    tools:context=".MainActivity"
+    android:background="@drawable/bggrad">
+
     <Button
         android:id="@+id/button"
         android:layout_width="0dp"
         android:layout_height="75dp"
         android:text="@string/wifi_settings"
+        android:background="@color/lightgreen"
+        android:textColor="@color/darkgrey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -22,6 +25,8 @@
         android:id="@+id/button2"
         android:layout_width="0dp"
         android:layout_height="75dp"
+        android:background="@color/lightgreen"
+        android:textColor="@color/darkgrey"
         android:text="@string/internet_connectivity"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -29,11 +34,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.195" />
-    
+
     <Button
         android:id="@+id/button3"
         android:layout_width="0dp"
         android:layout_height="75dp"
+        android:background="@color/lightgreen"
+        android:textColor="@color/darkgrey"
         android:text="@string/ipfs_settings"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -46,7 +53,9 @@
         android:id="@+id/button4"
         android:layout_width="0dp"
         android:layout_height="75dp"
-        android:text="@string/data_management"
+        android:text="@string/Cleanse"
+        android:background="@color/lightgreen"
+        android:textColor="@color/darkgrey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -59,6 +68,8 @@
         android:layout_width="0dp"
         android:layout_height="75dp"
         android:text="@string/about"
+        android:background="@color/lightgreen"
+        android:textColor="@color/darkgrey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -70,8 +81,6 @@
         android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/white"
-        android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.Light"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

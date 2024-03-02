@@ -7,6 +7,6 @@
     <string name="wifi_settings">Wifi Settings</string>
     <string name="internet_connectivity">Internet Connectivity</string>
     <string name="ipfs_settings">IPFS Settings</string>
-    <string name="data_management">Data Management</string>
+    <string name="Cleanse">Cleanse Data</string>
     <string name="about">About</string>
 </resources>

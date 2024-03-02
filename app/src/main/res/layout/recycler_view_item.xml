@@ -39,7 +39,7 @@
       tools:text="@tools:sample/lorem" />
 
   <TextView
-      android:id="@+id/Gid"
+      android:id="@+id/Cid"
       android:layout_width="266dp"
       android:layout_height="29dp"
       android:layout_marginStart="12dp"

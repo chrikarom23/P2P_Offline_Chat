@@ -21,8 +21,8 @@ class ConvoAdapter(val availableConvo: ArrayList<Convo>): RecyclerView.Adapter<C
     override fun onBindViewHolder(holder: ConvoViewHolder, position: Int) {
         val currentConvo = availableConvo[position]
 
-        holder.ConvoName.text = currentConvo.id
-        holder.Convoid.text = currentConvo.deviceName
+        holder.ConvoName.text = currentConvo.deviceName
+        holder.Convoid.text = currentConvo.cid.toString()
         if(currentConvo.privacy==true){
             holder.ConvoPic.setImageResource(R.drawable.spy)
         }
@@ -45,7 +45,7 @@ class ConvoAdapter(val availableConvo: ArrayList<Convo>): RecyclerView.Adapter<C
 
     class ConvoViewHolder(itemView: View, listener: ItemClickListener) : RecyclerView.ViewHolder(itemView){
         val ConvoName = itemView.findViewById<TextView>(R.id.ConvoName)
-        val Convoid = itemView.findViewById<TextView>(R.id.Gid)
+        val Convoid = itemView.findViewById<TextView>(R.id.Cid)
         val ConvoPic = itemView.findViewById<ImageView>(R.id.Convopic)
 
         init {
