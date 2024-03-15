@@ -4,8 +4,11 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
+import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkInfo
+import android.net.NetworkRequest
+import android.net.wifi.p2p.WifiP2pDevice
 import android.net.wifi.p2p.WifiP2pDeviceList
 import android.net.wifi.p2p.WifiP2pInfo
 import android.net.wifi.p2p.WifiP2pManager
@@ -20,11 +23,11 @@ class WifiDreciever(
     private val channel: WifiP2pManager.Channel,
     private val activity: PeersView): BroadcastReceiver(){
 
-   // fun initialize(
-   //     srcLooper: Looper,
-   //     srcContext: Context!,
-   //     listener: WifiP2pManager.ChannelListener!
-   // ): WifiP2pManager.Channel!
+    // fun initialize(
+    //     srcLooper: Looper,
+    //     srcContext: Context!,
+    //     listener: WifiP2pManager.ChannelListener!
+    // ): WifiP2pManager.Channel!
 
 
     override fun onReceive(context: Context?, intent: Intent?) {
@@ -40,7 +43,7 @@ class WifiDreciever(
                 // Call WifiP2pManager.requestPeers() to get a list of current peers
                 if (manager != null) {
                     Log.d("WifiDreciever", "Wifi Peers Changed, Calling requestPeers")
-                    manager.requestPeers(channel, activity.peerListListener)
+                    //manager.requestPeers(channel, activity.peerListListener)
                     //manager.requestPeers(channel){
                     //      peers: WifiP2pDeviceList -> activity.onPeersAvailable(peers)
 
@@ -49,34 +52,51 @@ class WifiDreciever(
             }
 
             WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION -> {
+                Log.i("WifiDReceiver", "WIFI P2P connection changed")
                 // Respond to new connection or disconnections
-                Log.d("WifiDreceiver", "Connection status changed")
-                if (manager != null) {
-                    val networkInfo: NetworkInfo? =
-                        intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO)
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+//                    var conman = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+//                    var netreq = NetworkRequest.Builder().addCapability(NetworkCapabilities.NET_CAPABILITY_WIFI_P2P).build()
+//                    var callback =  object: ConnectivityManager.NetworkCallback(){
+//                        override fun onAvailable(network: Network) {
+//                            super.onAvailable(network)
+//                            Log.d("WifiDReceiver", "onAvailable: Detect network");
+//                            Log.d("WifiDreceiver", "Connection status changed")
+//                            manager.requestConnectionInfo(channel, activity.connectionInfoListener)
+//                            //manager.requestGroupInfo(channel, activity.groupInfoListener)
+//                        }
+//                    }
+//                    conman.registerNetworkCallback(netreq, callback)
+//                }
+//                else{
+                    manager.let { manager ->
 
-                    if (networkInfo?.isConnected == true) {
-                        // We are connected to a peer
-                        Log.d("WiFiDirect", "Connected to a peer")
+                        Log.d("WifiDReciever", "Deprecated network callback")
 
-                        // Extract additional information if needed, like group owner info
-                        val wifiP2pInfo: WifiP2pInfo? =
-                            intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_INFO) as WifiP2pInfo?
+                        @Suppress("DEPRECATION")
+                        val networkInfo: NetworkInfo? = intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO)
 
-                        // Access wifiP2pInfo.groupOwnerAddress, wifiP2pInfo.isGroupOwner, etc.
-                    } else {
-                        // We are not connected
-                        Log.d("WiFiDirect", "Not connected to any peer")
+                        @Suppress("DEPRECATION")
+                        if (networkInfo?.isConnected == true) {
+                            manager.requestConnectionInfo(channel, activity.connectionInfoListener)
+                            //manager.requestGroupInfo(channel, activity.groupInfoListener)
+                        }
+                        else{
+                            Log.d("WifiDReciever", "disconnected")
+                        }
                     }
-                    //if(activity.isInternetAvailable(activity)){
-                    //manager.requestConnectionInfo(channel, activity.connlistener)
-                    //}
-
-                }
+                //}
+                //manager.requestConnectionInfo(channel, activity.connectionInfoListener)
+                //manager.requestGroupInfo(channel,activity.groupInfoListener)
             }
-                WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION -> {
-                    // Respond to this device's wifi state changing
-                }
+
+
+            WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION -> {
+                // Respond to this device's wifi state changing
+                @Suppress("DEPRECATION")
+                var device : WifiP2pDevice? = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE)
+                Log.d("WifiDReciver", "device status -- ${device?.status}")
             }
         }
     }
+}
