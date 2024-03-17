@@ -28,14 +28,18 @@ class OffMessages: AppCompatActivity() {
         sC = arrayListOf()
         val dao = Chat_Database.getInstance(this).chatDao
         lifecycleScope.launch {
-            var getlines = dao.get_lines(cid)
+            var getlines = dao.get_chatlines_with_cid(cid)
             var cname = dao.get_chatname(cid)
 //            sC.add(message("NewTest", "Chrome", "LOREM IPSUM", timestampp = java.util.Date().time))
             for(i in getlines){
                 var un = dao.get_username(i.uid)
+                if(i.uid == "green"){
+                    sC.add(message(i.cid.toString(),"You",i.line_text,i.timestamp))
+                }
+                else{
                 sC.add(message(i.cid.toString(),un,i.line_text,i.timestamp))
-                sC.add(message(i.cid.toString(),"You","Hello",i.timestamp))
-                Log.d("OffMessages", "Printing sC: ${un}, $i")
+                }
+                //Log.d("OffMessages", "Printing sC: ${un}, $i")
             }
             supportActionBar?.setTitle(cname)
 

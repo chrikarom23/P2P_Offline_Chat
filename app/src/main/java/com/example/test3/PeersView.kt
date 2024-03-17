@@ -63,7 +63,7 @@ class PeersView : AppCompatActivity(){
     //lateinit var deviceNameAr: String
     lateinit var deviceAr: ArrayList<WifiP2pDevice>
 
-    lateinit var uname: String
+    private lateinit var uname: String
     var peerdevice: String ="peer"
     private val buddies = mutableMapOf<String, String>()
     val SERVERPORT = "9000"
@@ -71,6 +71,7 @@ class PeersView : AppCompatActivity(){
     val serviceType = "_presence._tcp"
     private lateinit var ipadd: String
     private var peeripadd: String = ""
+    private lateinit var uidadd:String
 
     private lateinit var serviceReq: WifiP2pDnsSdServiceRequest
     private lateinit var servlistener: DnsSdServiceResponseListener
@@ -97,17 +98,6 @@ class PeersView : AppCompatActivity(){
         pingpeers.setOnClickListener {
             Log.d("PeersView","Starting discovery")
             startreg()
-
-//                manager.discoverPeers(channel, object : WifiP2pManager.ActionListener {
-//                    override fun onSuccess() {
-//                        toast1.show()
-//                    }
-//
-//                    override fun onFailure(reason: Int) {
-//                        toast2.setText("Discovery Failed. Reason: $reason")
-//                        toast2.show()
-//                    }
-//                })
         }
     }
 
@@ -127,6 +117,7 @@ class PeersView : AppCompatActivity(){
                 val device: WifiP2pDevice = deviceAr[pos]
                 Log.i("PeersView", "Attempting to connect to device: $device")
                 peerdevice = device.deviceName
+                uidadd = device.deviceAddress
                 config = WifiP2pConfig().apply {
                     deviceAddress = device.deviceAddress
                     wps.setup = WpsInfo.PBC
@@ -194,55 +185,6 @@ class PeersView : AppCompatActivity(){
 
     }
 
-//    val peerListListener = object: WifiP2pManager.PeerListListener {
-//        override fun onPeersAvailable(peers: WifiP2pDeviceList?) {
-//            availableConvo.clear()
-//            discoverService()
-//        }
-//    }
-
-//    val peerListListener = WifiP2pManager.PeerListListener { peerList ->
-//        val refreshedPeers = peerList.deviceList
-//        if(refreshedPeers != peers) {
-//            peers.clear()
-//            availableConvo.clear()
-//            peers.addAll(refreshedPeers)
-//            Log.d("PeersView", "In peerListListener")
-//
-//            deviceNameAr = peerList.deviceList.toString()
-//            deviceAr = arrayListOf<WifiP2pDevice>()
-//
-//            var index = 0
-//            for (i in peerList.deviceList) {
-//                deviceAr.add(i)
-//                Log.i("PeersView", "Adding device to deviceAr: $deviceAr")
-//                availableConvo.add(Convo(
-//                    (i.deviceName.toString()),
-//                    99,
-//                    (index%2==0)
-//                ))
-//                index++
-//                Log.d("PeersView", "Looping through device names: $i")
-//            }
-//            Log.d("PeersView", "Out of Loop")
-//
-//            Cadapter = ConvoAdapter(availableConvo)
-//            ConvoRecyclerView.adapter = Cadapter
-//            connectInit()
-//            //(Cadapter as WiFiPeerListAdapter
-////            adapter.onItemClick = {
-////                Log.d("PeersView", "Item Clicked")
-////                val toast3 = Toast.makeText(this, "Clicked", Toast.LENGTH_LONG)
-////                toast3.show()
-////            }
-//        }
-//        if(peers.isEmpty()){
-//            Log.d("Mine", "No peers found")
-//            val toast = Toast.makeText(this,"No Matching Peers Nearby", Toast.LENGTH_SHORT)
-//            toast.show()
-//        }
-//    }
-
     val connectionInfoListener = WifiP2pManager.ConnectionInfoListener {
             info: WifiP2pInfo ->
         val intent = Intent(this@PeersView, messaging::class.java)
@@ -254,12 +196,14 @@ class PeersView : AppCompatActivity(){
             intent.putExtra("GO", groupOwnerAddress)
             intent.putExtra("igo", info.isGroupOwner)
             intent.putExtra("user", uname)
-            intent.putExtra("peer", peerdevice)
+            intent.putExtra("uid", uidadd)
             startActivity(intent)
         }
         else if(info.groupFormed){
             Log.d("PeersViewConn","Group formed and current device is guest")
             intent.putExtra("GO", groupOwnerAddress)
+            intent.putExtra("user", uname)
+            intent.putExtra("uid", uidadd)
             startActivity(intent)
         }
 //        else if(!info.groupFormed && (info.groupOwnerAddress == null)){
@@ -267,15 +211,6 @@ class PeersView : AppCompatActivity(){
 //        }
     }
 
-//    val groupInfoListener = WifiP2pManager.GroupInfoListener {
-//            group: WifiP2pGroup ->
-//        if(group.isGroupOwner){
-//            Log.d("PeersView", "${group.owner}")
-//        }
-//        else{
-//            Log.d("PeersView", "not group owner ${group.owner}")
-//        }
-//    }
 
     private fun startreg(){
         var t = Toast.makeText(this, "Encountered a problem while starting the service", Toast.LENGTH_SHORT)

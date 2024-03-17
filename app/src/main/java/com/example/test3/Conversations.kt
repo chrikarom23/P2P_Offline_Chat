@@ -26,8 +26,6 @@ class Conversations: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_convos)
         setSupportActionBar(findViewById(R.id.my_toolbar))
-
-//        Dbaccess()
         Dbaccess()
         //init()
 
@@ -54,7 +52,7 @@ class Conversations: AppCompatActivity() {
             chatnames.forEach{dao.insertChat(it)}
             users.forEach{dao.insertUser(it)}
             chatlines.forEach{dao.insertChat_line(it)}
-            val chatlist = dao.get_all_chats()
+            val chatlist = dao.get_all_chatnames()
             Log.d("ConvoTest", "$chatlist")
             for(x in chatlist){
             storedConvo.add(Convo(peer = x.chatname, cid = x.id))
@@ -68,24 +66,12 @@ class Conversations: AppCompatActivity() {
                 override fun onClickPosition(pos: Int) {
                     Toast.makeText(this@Conversations, "clicked $pos", Toast.LENGTH_SHORT).show()
                     val intent = Intent(this@Conversations, OffMessages::class.java)
-                    intent.putExtra("id" , storedConvo[pos].cid)
+                    intent.putExtra("id" ,storedConvo[pos].cid)//TODO CHECKKKKK!!!!
                     startActivity(intent)
                 }
             })
         }
     }
-
-//    fun Dbaccess(){
-//        val db = Room.databaseBuilder(applicationContext,ConvoDatabase::class.java,"ConversationDB").allowMainThreadQueries().build()
-//        val testconvo: ConvoData = ConvoData(1, "Tester", "12:12:12")
-//        db.convodao.upsertConvo(testconvo)
-//        var convos = db.convodao.getConvosByTimestamp()
-//        Log.d("Conversations","Convos added: ${convos.toString()}")
-//        storedConvo = ArrayList<Convo>()
-//        storedConvo.add(Convo(convos[0].id.toString(),convos[0].deviceName,true))
-//        storedConvo.add(Convo(convos[0].id.toString(),"Thar",true))
-//        storedConvo.add(Convo(convos[0].id.toString(),"Kuri",true))
-//    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_s,menu)

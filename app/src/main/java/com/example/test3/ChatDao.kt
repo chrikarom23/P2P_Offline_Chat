@@ -33,15 +33,15 @@ interface ChatDao {
 
     @Transaction
     @Query("SELECT * FROM Chat")
-    suspend fun get_all_chats(): List<Chat>
+    suspend fun get_all_chatnames(): List<Chat>
 
-//    @Transaction
-//    @Query("SELECT * FROM Chat WHERE chatname = :chatname")
-//    suspend fun get_chat_lines(chatname: String): List<ChatwithChat_line>
+    @Transaction
+    @Query("SELECT * FROM User Where username = :username")
+    suspend fun get_all_usernames(username: String): List<User>
 
     @Transaction
     @Query("SELECT * FROM Chat_line Where cid = :cid")
-    suspend fun get_lines(cid: Int): List<Chat_line>
+    suspend fun get_chatlines_with_cid(cid: Int): List<Chat_line>
 
     @Transaction
     @Query("SELECT username FROM User Where uid = :uid")

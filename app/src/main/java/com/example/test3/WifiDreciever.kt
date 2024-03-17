@@ -89,11 +89,17 @@ class WifiDreciever(
                             manager.requestConnectionInfo(channel, (activity as messaging).connectionInfoListener)
                             }
                             else{
-                                //idk
+                                //none
                             }
                         }
                         else{
                             Log.d("WifiDReciever", "disconnected")
+                            if(activity is messaging){
+                                manager.requestConnectionInfo(channel, (activity as messaging).connectionInfoListener)
+                            }
+                            else{
+                                //none
+                            }
                         }
                     }
                 //}
