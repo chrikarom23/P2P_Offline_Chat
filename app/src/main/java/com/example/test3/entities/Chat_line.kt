@@ -18,5 +18,5 @@ data class Chat_line(
     val line_text: String,
     val timestamp: Long = java.util.Date().time,
     val cid: Int,
-    val uid: String="You"
+    val uid: String
 )

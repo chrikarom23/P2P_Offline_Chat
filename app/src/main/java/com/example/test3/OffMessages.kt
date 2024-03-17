@@ -34,6 +34,7 @@ class OffMessages: AppCompatActivity() {
             for(i in getlines){
                 var un = dao.get_username(i.uid)
                 sC.add(message(i.cid.toString(),un,i.line_text,i.timestamp))
+                sC.add(message(i.cid.toString(),"You","Hello",i.timestamp))
                 Log.d("OffMessages", "Printing sC: ${un}, $i")
             }
             supportActionBar?.setTitle(cname)

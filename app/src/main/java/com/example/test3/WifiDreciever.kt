@@ -13,6 +13,7 @@ import android.net.wifi.p2p.WifiP2pDeviceList
 import android.net.wifi.p2p.WifiP2pInfo
 import android.net.wifi.p2p.WifiP2pManager
 import android.os.Build
+import android.os.IBinder
 import android.os.Looper
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -21,7 +22,7 @@ import androidx.core.content.ContextCompat.getSystemService
 class WifiDreciever(
     private val manager: WifiP2pManager,
     private val channel: WifiP2pManager.Channel,
-    private val activity: PeersView): BroadcastReceiver(){
+    private var activity: Context): BroadcastReceiver(){
 
     // fun initialize(
     //     srcLooper: Looper,
@@ -43,6 +44,9 @@ class WifiDreciever(
                 // Call WifiP2pManager.requestPeers() to get a list of current peers
                 if (manager != null) {
                     Log.d("WifiDreciever", "Wifi Peers Changed, Calling requestPeers")
+                    if(activity is messaging){
+                        manager.requestPeers(channel, (activity as messaging).peerListListener)
+                    }
                     //manager.requestPeers(channel, activity.peerListListener)
                     //manager.requestPeers(channel){
                     //      peers: WifiP2pDeviceList -> activity.onPeersAvailable(peers)
@@ -78,8 +82,15 @@ class WifiDreciever(
 
                         @Suppress("DEPRECATION")
                         if (networkInfo?.isConnected == true) {
-                            manager.requestConnectionInfo(channel, activity.connectionInfoListener)
+                            if(activity is PeersView){
+                            manager.requestConnectionInfo(channel, (activity as PeersView).connectionInfoListener)
                             //manager.requestGroupInfo(channel, activity.groupInfoListener)
+                        } else if(activity is messaging){
+                            manager.requestConnectionInfo(channel, (activity as messaging).connectionInfoListener)
+                            }
+                            else{
+                                //idk
+                            }
                         }
                         else{
                             Log.d("WifiDReciever", "disconnected")
