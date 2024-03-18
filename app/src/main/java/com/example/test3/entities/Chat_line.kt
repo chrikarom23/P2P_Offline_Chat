@@ -13,8 +13,7 @@ import java.sql.Timestamp
 ]
 )
 data class Chat_line(
-    @PrimaryKey(autoGenerate = true)
-    val chat_line_id: Int = 0,
+    @PrimaryKey(autoGenerate = true)val chat_line_id: Int= 1,
     val line_text: String,
     val timestamp: Long = java.util.Date().time,
     val cid: Int,

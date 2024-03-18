@@ -6,9 +6,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+//import io.ipfs.kotlin.defaults.LocalIPFS
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.json.JSONArray
+import org.json.JSONObject
+import java.io.File
+import java.io.FileWriter
 
 class OffMessages: AppCompatActivity() {
+
+    var DB_FILEPATH = "/data/data/{package_name}/databases/chat_db.db"
+    private lateinit var dao:ChatDao
 
     lateinit var sC: ArrayList<message>
     lateinit var offMessageRecycler: RecyclerView
@@ -26,11 +35,10 @@ class OffMessages: AppCompatActivity() {
 
     fun getmessages(cid: Int){
         sC = arrayListOf()
-        val dao = Chat_Database.getInstance(this).chatDao
+        dao = Chat_Database.getInstance(this).chatDao
         lifecycleScope.launch {
             var getlines = dao.get_chatlines_with_cid(cid)
             var cname = dao.get_chatname(cid)
-//            sC.add(message("NewTest", "Chrome", "LOREM IPSUM", timestampp = java.util.Date().time))
             for(i in getlines){
                 var un = dao.get_username(i.uid)
                 if(i.uid == "green"){
@@ -39,7 +47,6 @@ class OffMessages: AppCompatActivity() {
                 else{
                 sC.add(message(i.cid.toString(),un,i.line_text,i.timestamp))
                 }
-                //Log.d("OffMessages", "Printing sC: ${un}, $i")
             }
             supportActionBar?.setTitle(cname)
 
@@ -47,7 +54,7 @@ class OffMessages: AppCompatActivity() {
             offMessageRecycler = findViewById(R.id.offMessageRecyclerView)
             offMessageRecycler.layoutManager = LinearLayoutManager(this@OffMessages)
             offMessageRecycler.adapter = offMessageAdapter
+            return@launch
         }
-
     }
 }

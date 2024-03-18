@@ -116,8 +116,8 @@ class PeersView : AppCompatActivity(){
                 Log.d("PeersView", "In ItemClickListener")
                 val device: WifiP2pDevice = deviceAr[pos]
                 Log.i("PeersView", "Attempting to connect to device: $device")
-                peerdevice = device.deviceName
-                uidadd = device.deviceAddress
+                //peerdevice = device.deviceName
+                //uidadd = device.deviceAddress
                 config = WifiP2pConfig().apply {
                     deviceAddress = device.deviceAddress
                     wps.setup = WpsInfo.PBC
@@ -134,7 +134,7 @@ class PeersView : AppCompatActivity(){
                         })
                     }
                 }
-                val random = Random(6)
+                val random = Random(3)
                 config.groupOwnerIntent=random.nextInt(14)
                 //config.groupOwnerIntent = 15
                 manager.connect(channel,config,object: WifiP2pManager.ActionListener{
@@ -196,35 +196,32 @@ class PeersView : AppCompatActivity(){
             intent.putExtra("GO", groupOwnerAddress)
             intent.putExtra("igo", info.isGroupOwner)
             intent.putExtra("user", uname)
-            intent.putExtra("uid", uidadd)
+            //intent.putExtra("uid", uidadd)
             startActivity(intent)
         }
         else if(info.groupFormed){
             Log.d("PeersViewConn","Group formed and current device is guest")
             intent.putExtra("GO", groupOwnerAddress)
             intent.putExtra("user", uname)
-            intent.putExtra("uid", uidadd)
+            //intent.putExtra("uid", uidadd)
             startActivity(intent)
         }
-//        else if(!info.groupFormed && (info.groupOwnerAddress == null)){
-//            disconnect()
-//        }
     }
 
 
     private fun startreg(){
         var t = Toast.makeText(this, "Encountered a problem while starting the service", Toast.LENGTH_SHORT)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val connman= applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            val link: LinkProperties = connman.getLinkProperties(connman.activeNetwork) as LinkProperties
-            ipadd = link.linkAddresses[1].toString()
-        } else {
-            Log.d("PeersView", "Lower API using deprecated stuff")
-            val wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
-            @Suppress("DEPRECATION")
-            ipadd = android.text.format.Formatter.formatIpAddress(wifiManager.connectionInfo.ipAddress)
-        }
-        val record: Map<String, String> = mapOf("buddyname" to uname, "visibility" to "public", "ipaddress" to ipadd)
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            val connman= applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+//            val link: LinkProperties = connman.getLinkProperties(connman.activeNetwork) as LinkProperties
+//            ipadd = link.linkAddresses[1].toString()
+//        } else {
+//            Log.d("PeersView", "Lower API using deprecated stuff")
+//            val wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+//            @Suppress("DEPRECATION")
+//            ipadd = android.text.format.Formatter.formatIpAddress(wifiManager.connectionInfo.ipAddress)
+//        }
+        val record: Map<String, String> = mapOf("buddyname" to uname, "visibility" to "public")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             val serviceinfo = WifiP2pDnsSdServiceInfo.newInstance(instanceName,serviceType, record)
             manager.addLocalService(channel, serviceinfo, object: WifiP2pManager.ActionListener{
@@ -252,9 +249,7 @@ class PeersView : AppCompatActivity(){
             Log.i("PeersView", "DnsSdTxt Record available")
             Log.i("PeersView", "${txtRecordMap["buddyname"]}")
             Log.i("PeersView", "${txtRecordMap["visibility"]}")
-            Log.i("PeersView", "${txtRecordMap["ipaddress"]}")
             txtRecordMap["buddyname"]?.also { buddies[srcDevice.deviceName] = it}
-            txtRecordMap["ipaddress"]?.also{ peeripadd = it }
             if(txtRecordMap["visibility"] == "private")
                 privacy = true
             else

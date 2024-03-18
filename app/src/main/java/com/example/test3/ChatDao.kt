@@ -2,6 +2,8 @@ package com.example.test3
 
 import androidx.room.Dao
 import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
@@ -13,7 +15,7 @@ import com.example.test3.entities.relations.ChatwithChat_line
 @Dao
 interface ChatDao {
 
-    @Upsert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertChat_line(chat_line:Chat_line)
 
     @Upsert
@@ -36,8 +38,8 @@ interface ChatDao {
     suspend fun get_all_chatnames(): List<Chat>
 
     @Transaction
-    @Query("SELECT * FROM User Where username = :username")
-    suspend fun get_all_usernames(username: String): List<User>
+    @Query("SELECT * FROM User")
+    suspend fun get_all_usernames(): List<User>
 
     @Transaction
     @Query("SELECT * FROM Chat_line Where cid = :cid")

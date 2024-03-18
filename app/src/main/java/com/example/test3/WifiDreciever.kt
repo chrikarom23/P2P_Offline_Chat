@@ -87,6 +87,7 @@ class WifiDreciever(
                             //manager.requestGroupInfo(channel, activity.groupInfoListener)
                         } else if(activity is messaging){
                             manager.requestConnectionInfo(channel, (activity as messaging).connectionInfoListener)
+
                             }
                             else{
                                 //none

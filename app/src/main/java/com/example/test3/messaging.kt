@@ -15,6 +15,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -51,6 +52,9 @@ class messaging : AppCompatActivity(){
     private var GOAdd: String? = "192.168.49.1"
     private lateinit var user: String
     private var EXITFLAG = 0
+    private var ALERT = 0
+    private var SAVESTAT = 0
+
     //private lateinit var peer: String
 
     override fun onCreate(savedInstanceState: Bundle?){
@@ -104,8 +108,35 @@ class messaging : AppCompatActivity(){
         }
     }
 
+//    fun alertdiag(): Boolean{
+//        var res: Boolean = false
+//        val builder = androidx.appcompat.app.AlertDialog.Builder(this)
+//        builder.setTitle("Do you want to save the chat?")
+//        builder.setMessage("Do you want to save the chat? The chat will be saved on the successful confirmation of all parties within the current group.")
+//        builder.setIcon(R.drawable.baseline_add_24)
+//        builder.setPositiveButton("YES"){
+//                dialog,id ->
+//            res = true
+//            dialog.dismiss()
+//        }
+//        builder.setNegativeButton("CANCEL"){
+//                dialog,id ->
+//            res = false
+//            dialog.dismiss()
+//        }
+//        runOnUiThread(Runnable {
+//            run {
+//                val alertDialog: AlertDialog = builder.create()
+//                alertDialog.setCancelable(false)
+//                alertDialog.show()
+//            }
+//        })
+//        return res
+//    }
+
     fun loopbreaker(){
-        EXITFLAG = 1
+        //EXITFLAG = 1
+        ALERT = 1
     }
 
     fun servertry(){
@@ -123,11 +154,44 @@ class messaging : AppCompatActivity(){
                     var ss = sersock.accept()
                     var dosS = DataOutputStream(ss.getOutputStream())
                     var dis = DataInputStream(ss.getInputStream())
+//                    Thread(Runnable(){run { while (true){
+//                        println("ALERT")
+//                        Thread.sleep(500)
+//                        if(ALERT == 1){
+//                            Thread(Runnable(){run{
+//                                while (true){
+//                                    try{
+//                                var res = alertdiag()
+//                                dosS.writeBoolean(res)
+//                                dosS.flush()}
+//                                catch (e:Exception){
+//                                    e.printStackTrace()
+//                                }
+//                                finally {
+//                                    dosS.close()
+//                                }}
+//                            }}).start()
+//
+//                            Thread(Runnable(){run{
+//                                if(dis.readBoolean()){
+//                                    SAVESTAT = 1
+//                                    disconnect()
+//                                }else{
+//                                    SAVESTAT = 0
+//                                    disconnect()
+//                                }
+//                            }}).start()
+//                        }
+//                    }
+//                    }}).start()
                     val inputthread = Thread{
                         run{
                             try{
                                 Log.d("Messaging Thread", "print t5")
                                 while(true) {
+                                    if(EXITFLAG==1){
+                                        break
+                                    }
                                     var tempd = ""
                                     try{
                                         while(dis.available()>0){
@@ -146,9 +210,6 @@ class messaging : AppCompatActivity(){
                                             MessageRecycler.adapter = Madapter
                                         }
                                     })}
-                                    if(EXITFLAG==1){
-                                        break
-                                    }
                                 }
                             }
                             catch (e: Exception){
@@ -159,6 +220,9 @@ class messaging : AppCompatActivity(){
                     inputthread.start()
                         try{
                             while(true) {
+                                if(EXITFLAG==1){
+                                    break
+                                }
                                 //Log.d("MessagingView", "im in heree")
                                 sendMessageButton.setOnClickListener{
                                     Log.d("Messaging", user)
@@ -185,9 +249,6 @@ class messaging : AppCompatActivity(){
                                         }}).start()
                                     sendMessageEditText.text.clear()
                                 }
-                                }
-                                if(EXITFLAG==1){
-                                    break
                                 }
                             }
                         }catch (e: Exception){
@@ -220,10 +281,44 @@ class messaging : AppCompatActivity(){
                     cs.connect(InetSocketAddress(GOAdd,9000),10000)
                     var cis = DataInputStream(cs.getInputStream())
                     var cos = DataOutputStream(cs.getOutputStream())
+//                    Thread(Runnable(){run { while (true){
+//                        println("ALERT")
+//                        Thread.sleep(500)
+//                        if(ALERT == 1){
+//                            Thread(Runnable(){run{
+//                                while (true){
+//                                    try{
+//                                        var res = alertdiag()
+//                                        cos.writeBoolean(res)
+//                                        cos.flush()}
+//                                    catch (e:Exception){
+//                                        e.printStackTrace()
+//                                    }
+//                                    finally {
+//                                        cos.close()
+//                                    }}
+//                            }}).start()
+//
+//                            Thread(Runnable(){run{
+//                                if(cis.readBoolean()){
+//                                    SAVESTAT = 1
+//                                    disconnect()
+//                                }else{
+//                                    SAVESTAT = 0
+//                                    disconnect()
+//                                }
+//                            }}).start()
+//                        }
+//                    }
+//                    }}).start()
                     var inputthread = Thread{run {
                     try{
                         Log.d("Messaging Thread", "print t2")
                         while (true) {
+                            if(EXITFLAG==1){
+                                Log.d("Messaging Thread", "CALLEDD!!!")
+                                break
+                            }
                             var temp = ""
                             try{
                                 while (cis.available()>0){
@@ -243,19 +338,22 @@ class messaging : AppCompatActivity(){
                                     }
                                 })
                                 }
-                            if(EXITFLAG==1){
-                                break
-                            }
                         }
                     }
                     catch (e:Exception){
                         println(e)
                         cis.close()
                     }
+                        finally {
+                            cis.close()
+                        }
                     }}
                     inputthread.start()
                     try {
                         while (true) {
+                            if(EXITFLAG==1){
+                                break
+                            }
                             sendMessageButton.setOnClickListener{
                                 Log.d("Messaging", user)
                                 if(!sendMessageEditText.text.toString().isNullOrEmpty()){
@@ -282,9 +380,6 @@ class messaging : AppCompatActivity(){
                                 sendMessageEditText.text.clear()
                             }
                             }
-                            if(EXITFLAG==1){
-                                break
-                            }
                         }
                     } catch (e: Exception) {
                         cos.close()
@@ -305,12 +400,15 @@ class messaging : AppCompatActivity(){
 
     val connectionInfoListener = WifiP2pManager.ConnectionInfoListener {
             info: WifiP2pInfo ->
-        if(!info.groupFormed){
+        if(!info.groupFormed) {
             Toast.makeText(this, "Peer Left, closing connection", Toast.LENGTH_LONG).show()
             Log.d("Messaging", "Save chat prompt")
             var diag = Dialog(this)
             diag.setContentView(R.layout.save_chat)
-            diag.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            diag.window?.setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
             diag.setCancelable(false);
             diag.window?.attributes?.windowAnimations = R.anim.slide_from_left;
 
@@ -320,6 +418,7 @@ class messaging : AppCompatActivity(){
             confirm.setOnClickListener {
                 val chatname = diag.findViewById<EditText>(R.id.chat_name)
                 savetodb(chatname.text.toString())
+                diag.dismiss()
                 finish()
             }
             cancel.setOnClickListener {
@@ -332,7 +431,7 @@ class messaging : AppCompatActivity(){
 
     private fun savetodb(chatname: String){
         val dao = Chat_Database.getInstance(this).chatDao
-        //var Uexfl = false
+        var Uexfl = false
         var Cexfl = false
         var uid: String= ""
         var cid: Int =  0
@@ -354,18 +453,27 @@ class messaging : AppCompatActivity(){
                     dao.insertChat(temp)
                     Log.i("Database", "Adding chat: ${temp}")
                 }
-                var users = dao.get_all_usernames(user)
+                var users = dao.get_all_usernames()
                 println(users)
-//                for (i in users) {
-//                    println(i)
-//                    if (i.username == user) {
-//                        Uexfl = true
-//                        println(uid)
-//                        break
-//                    }
-//                }
+                for (i in users) {
+                    println(i)
+                    if (i.username == user) {
+                        uid = i.uid
+                        Uexfl = true
+                        println(uid)
+                        break
+                    }
+                }
+                if (!Uexfl) {
+                    uid = user.hashCode().toString()
+                    var temp = User(uid, user)
+                    dao.insertUser(temp)
+                    Log.i("Database", "Adding user: ${temp}")
+                }
                 try{
                     for(i in MessageArray){
+                        println(i)
+                        if(users.isNotEmpty()){
                         for(j in users){
                             if(j.username == i.uname){
                                 uid = j.uid
@@ -375,20 +483,24 @@ class messaging : AppCompatActivity(){
                                 uid = "green"
                                 break
                             }
-                            else{
-                                uid = i.uname.hashCode().toString()
-                                var temp = User(uid, i.uname)
-                                Log.i("Database", "Adding user: ${temp}")
-                                dao.insertUser(temp)
-                                break
-                            }
+                        }}
+                        else if(i.uname == "You"){
+                            uid = "green"
                         }
-                        dao.insertChat_line(Chat_line(cid = cid, uid = uid, line_text = i.line_text, timestamp = i.timestampp))}
+                        else{
+                            uid = i.uname.hashCode().toString()
+                            var temp = User(uid, i.uname)
+                            Log.i("Database", "Adding user: ${temp}")
+                            dao.insertUser(temp)
+                        }
+                        println("adding chatlines: " +Chat_line(cid = cid, uid = uid, line_text = i.line_text, timestamp = i.timestampp))
+                    dao.insertChat_line(Chat_line(cid = cid, uid = uid, line_text = i.line_text, timestamp = i.timestampp, chat_line_id = ((1..10000).shuffled().first())))
+                    //MessageArray.forEach{dao.insertChat_line(Chat_line(cid = cid, uid = uid, line_text = it.line_text, timestamp = it.timestampp))}
+                }
                 }
                 catch (e:Exception){
                     e.printStackTrace()
                 }
-                //exitProcess(0)
                 return@launch
             }
         }
