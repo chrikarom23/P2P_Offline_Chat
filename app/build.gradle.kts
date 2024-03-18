@@ -8,8 +8,6 @@ plugins {
 android {
     namespace = "com.example.test3"
     compileSdk = 34
-    buildToolsVersion = "29.0.3"
-
 
     defaultConfig {
         applicationId = "com.example.test3"
@@ -43,7 +41,6 @@ dependencies {
 
     implementation("androidx.room:room-ktx:2.6.1")
     kapt("androidx.room:room-compiler:2.6.1")
-    implementation("com.github.ipfs:java-ipfs-http-client: v1.3.3")
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.activity:activity-ktx:1.8.2")
     implementation("androidx.fragment:fragment-ktx:1.6.2")
