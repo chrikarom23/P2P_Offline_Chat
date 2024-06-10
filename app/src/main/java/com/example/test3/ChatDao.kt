@@ -56,4 +56,8 @@ interface ChatDao {
     @Transaction
     @Query("SELECT timestamp FROM Chat_line INNER JOIN Chat Where cid = :cid")
     suspend fun get_timestamp(cid: Int): Long
+    @Transaction
+    @Query("SELECT * FROM Chat_line")
+    suspend fun get_all_chatlines(): List<Chat_line>
+
 }

@@ -11,10 +11,9 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven { url = uri("https://jitpack.io") }
-        maven { url = uri("https://dl.bintray.com/textile/maven") }
     }
 }
 
-rootProject.name = "test3"
+rootProject.name = "pares"
 include(":app")
  

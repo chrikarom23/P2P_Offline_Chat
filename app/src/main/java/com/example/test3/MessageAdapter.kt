@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 class MessageAdapter(context: Context, val storedConvo: ArrayList<message>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -26,7 +28,9 @@ class MessageAdapter(context: Context, val storedConvo: ArrayList<message>): Rec
         fun bind(position: Int){
             val Sdata = sC[position]
             TextLine.text = Sdata.line_text
-            Timestampp.text = Sdata.timestampp.toString()
+            Timestampp.text = SimpleDateFormat.getTimeInstance(SimpleDateFormat.MEDIUM, Locale.UK).format(
+                Date(Sdata.timestampp)
+            )
         }
     }
 
@@ -37,7 +41,7 @@ class MessageAdapter(context: Context, val storedConvo: ArrayList<message>): Rec
         fun bind(position: Int){
             val Sdata = sC[position]
             TextLine.text = Sdata.line_text
-            Timestampp.text = Sdata.timestampp.toString()
+            Timestampp.text = SimpleDateFormat.getTimeInstance(SimpleDateFormat.MEDIUM, Locale.UK).format(Date(Sdata.timestampp))
             uname.text = Sdata.uname
         }
     }

@@ -4,78 +4,61 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:background="@drawable/bggrad">
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="0dp"
-        android:layout_height="75dp"
-        android:text="@string/wifi_settings"
-        android:background="@color/lightgreen"
-        android:textColor="@color/darkgrey"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.081" />
+    android:background="@drawable/bggrad"
+    tools:context=".MainActivity">
 
     <Button
         android:id="@+id/button2"
-        android:layout_width="0dp"
+        android:layout_width="411dp"
         android:layout_height="75dp"
-        android:background="@color/lightgreen"
+        android:background="@color/whitegrey"
+        android:text="Export data"
         android:textColor="@color/darkgrey"
-        android:text="@string/internet_connectivity"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/button3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.195" />
+        app:layout_constraintVertical_bias="0.853" />
 
     <Button
         android:id="@+id/button3"
-        android:layout_width="0dp"
+        android:layout_width="411dp"
         android:layout_height="75dp"
-        android:background="@color/lightgreen"
+        android:layout_marginBottom="24dp"
+        android:background="@color/whitegrey"
+        android:text="ipfs_upload"
         android:textColor="@color/darkgrey"
-        android:text="@string/ipfs_settings"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/button4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.309" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/button4"
-        android:layout_width="0dp"
+        android:layout_width="411dp"
         android:layout_height="75dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/warning_button"
         android:text="@string/Cleanse"
-        android:background="@color/lightgreen"
         android:textColor="@color/darkgrey"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/button5"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.423" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/button5"
-        android:layout_width="0dp"
+        android:layout_width="411dp"
         android:layout_height="75dp"
+        android:layout_marginBottom="368dp"
+        android:background="@color/whitegrey"
         android:text="@string/about"
-        android:background="@color/lightgreen"
         android:textColor="@color/darkgrey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.538" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/my_toolbar"

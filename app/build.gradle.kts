@@ -15,6 +15,7 @@ android {
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
+//        multiDexEnabled = true
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -38,13 +39,15 @@ android {
 }
 
 dependencies {
-
     implementation("androidx.room:room-ktx:2.6.1")
     kapt("androidx.room:room-compiler:2.6.1")
     implementation("androidx.core:core-ktx:1.12.0")
+    implementation("net.zetetic:android-database-sqlcipher:4.5.3")
+    implementation("androidx.sqlite:sqlite-ktx:2.4.0")
     implementation("androidx.activity:activity-ktx:1.8.2")
     implementation("androidx.fragment:fragment-ktx:1.6.2")
     implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("com.github.ipfs:java-ipfs-http-client:1.3.3")
     implementation("com.google.code.gson:gson:2.9.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("com.google.android.material:material:1.11.0")
